@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
+
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     MediaPlayer mp;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     EditText hr,min;
     Switch set;
     int hour,minute;
+    MediaPlayer mediaPlayer;
 
 //https://markojerkic.com/background-task-how-to-start-an-activity-at-a-certain-time/
 
@@ -39,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
         min=findViewById(R.id.minute);
         set=findViewById(R.id.switch1);
 
-        MediaPlayer mediaPlayer=MediaPlayer.create(context,R.raw.bgm);
-        mediaPlayer.start();
-        mediaPlayer.getDuration();
+//        MediaPlayer mediaPlayer=MediaPlayer.create(context,R.raw.bgm);
+//        mediaPlayer.start();
+//        mediaPlayer.getDuration();
 
 
         set.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -99,6 +101,14 @@ public class MainActivity extends AppCompatActivity {
             Window win = this.getWindow();
             win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
             win.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+            //coming from wake lock  alarm recieved.
+
+         mediaPlayer=MediaPlayer.create(context,R.raw.bgm);
+        mediaPlayer.start();
+        mediaPlayer.getDuration();
+
+            //startActivity(new Intent(MainActivity.this,POPUP.class));
         }
 
         alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -121,6 +131,17 @@ public class MainActivity extends AppCompatActivity {
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
 
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mediaPlayer.isPlaying())
+        {
+            mediaPlayer.stop();
+            finish();
+        }
 
 
     }
